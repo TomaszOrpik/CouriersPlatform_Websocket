@@ -22,7 +22,8 @@ export class AppService {
       const packageNumbers = await courierService.getPackageNumbersByCourier(employeeNumber);
       await Promise.all(packageNumbers.map(async (pnumber) => {
         const positions = await this.getPositionsByPackageNumber(pnumber);
-        this.sendMessage(pnumber, MapType.package, positions);
+        const packageId = await this.courierService.getPackageIdByNumber(pnumber);
+        this.sendMessage(packageId, MapType.package, positions);
       }));
     });
   }

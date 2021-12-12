@@ -55,9 +55,9 @@ export class CourierService {
             const packageId = packageModel._id;
             const courier = await this.courierModel.find();
             courier.forEach((c) => {
-                if (c.currentPackages === packageId) positions.push(c.startPosition);
+                if (c.currentPackages.toString() === packageId.toString()) positions.push(c.startPosition);
                 c.undeliveredPackages.forEach((id) => {
-                    if (id === packageId) positions.push(c.startPosition);
+                    if (id.toString() === packageId.toString()) positions.push(c.startPosition);
                 })
             });
             positions.push(packageModel.position);
@@ -75,5 +75,14 @@ export class CourierService {
             return '';
         }
 
+    }
+
+    async getPackageIdByNumber(packageNumber: string): Promise<string> {
+        try {
+            const packageModel = await this.packageModel.findOne({ "packageNumber": packageNumber });
+            return packageModel._id.toString();
+        } catch (e) {
+            return '';
+        }
     }
 }
